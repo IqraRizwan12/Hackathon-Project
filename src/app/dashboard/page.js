@@ -45,7 +45,6 @@ export default function Dashboard() {
   useEffect(()=>{
     
     getData()
-    // request()
     request()
     MyContacts()
 
@@ -106,6 +105,8 @@ export default function Dashboard() {
     return <div>Loading...</div>
   }
 
+  
+
 
 
 
@@ -117,7 +118,7 @@ export default function Dashboard() {
   }
 
 
- 
+   console.log('msg',msg)
   
 
   return <div >
@@ -198,6 +199,18 @@ export default function Dashboard() {
             <FaEnvelope/>
           </div>
         })}
+        <div>
+        <form >
+          <input style={{backgroundColor:'beige'}} type="text" placeholder="Type your message here..." onChange={(e)=>setNewMessages(e.target.value)} />
+          <button style={{padding:'10px',marginLeft:'60px',fontSize:'small',backgroundColor:'red',borderRadius:'5px',width:'50px', marginTop:'10px'}}  onClick={postMessages}>Send</button>
+        </form>
+      </div>
+
+      {/* <div>
+        {msg.map(item =>{
+          return <div>{item.text}</div>
+        })}
+      </div> */}
       </div>
     </div>
     
@@ -217,12 +230,12 @@ export default function Dashboard() {
     </Popup>
 
     {/* <Popup isOpen={popUpOpen} onClose={closePopupWindow}> */}
-      <div>
+      {/* <div>
         <form >
           <input style={{backgroundColor:'beige'}} type="text" placeholder="Type your message here..." onChange={(e)=>setNewMessages(e.target.value)} />
           <button  onClick={postMessages}>Send</button>
         </form>
-      </div>
+      </div> */}
     {/* </Popup> */}
 
   

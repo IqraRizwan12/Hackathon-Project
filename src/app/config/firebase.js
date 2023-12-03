@@ -181,6 +181,19 @@ async function checkAndCreateRoom(friendId,setMsg) {
     console.log('chats',chat)
   });
 
+
+  // function getChat(){
+  //   const q = query(collection(db, "chatrooms"));
+  //   const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  //     const newChat = [];
+  //     querySnapshot.forEach((doc) => {
+  //         newChat.push({id:doc.id,...doc.data()});
+  //     });
+  //     setData(newChat)
+  //     console.log('chats',newChat)
+  //   });
+
+  // }
  
 
 }
@@ -192,4 +205,4 @@ async function checkAndCreateRoom(friendId,setMsg) {
 
 
 
-export { loginWithFacebook, posting, getPosts, collection, query, where, onSnapshot, db, updateStatus, checkAndCreateRoom,handleChat }
+export { loginWithFacebook, posting, getPosts, collection, query, where, onSnapshot, db, updateStatus, checkAndCreateRoom,handleChat}
