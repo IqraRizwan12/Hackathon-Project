@@ -2,9 +2,9 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { FacebookAuthProvider } from "firebase/auth"
 import { getAuth, signInWithPopup } from "firebase/auth"
-import { collection, addDoc, getFirestore, getDocs,updateDoc,doc,serverTimestamp } from "firebase/firestore"
+import { collection, addDoc, getFirestore, getDocs, updateDoc, doc, serverTimestamp,firebase } from "firebase/firestore"
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
-import {  query, where, onSnapshot } from "firebase/firestore"
+import { query, where, onSnapshot } from "firebase/firestore"
 
 const firebaseConfig = {
   apiKey: "AIzaSyBpSQIbxUT4kWlhqd6il1iU4eauKRgqaPM",
@@ -22,6 +22,7 @@ const provider = new FacebookAuthProvider();
 const auth = getAuth();
 const db = getFirestore(app)
 const storage = getStorage(app)
+
 
 
 
@@ -70,54 +71,54 @@ async function getPosts() {
   querySnapshot.forEach((doc) => {
     const postData = doc.data()
     data.push(postData)
-    console.log('data',data)
+    console.log('data', data)
     // doc.data() is never undefined for query doc snapshots
     console.log(doc.id, " => ", doc.data());
   });
   return data
-  
+
 }
 
 
 
 const user = [
   {
-   fullname:'Hiba',
-   email:'hiba@gmail.com',
-   status:'pending'
+    fullname: 'Hiba',
+    email: 'hiba@gmail.com',
+    status: 'pending'
 
-   
+
   },
   {
-    fullname:'Ali',
-    email:'ali@gmail.com',
-    status:'pending'
- 
-    
-   },
-   {
-    fullname:'Hamna',
-    email:'hamna@gmail.com',
-    status:'pending'
- 
+    fullname: 'Ali',
+    email: 'ali@gmail.com',
+    status: 'pending'
 
-   },
-   {
-    fullname:'Soha',
-    email:'soha@gmail.com',
-    status:'pending'
- 
-    
-   }
+
+  },
+  {
+    fullname: 'Hamna',
+    email: 'hamna@gmail.com',
+    status: 'pending'
+
+
+  },
+  {
+    fullname: 'Soha',
+    email: 'soha@gmail.com',
+    status: 'pending'
+
+
+  }
 
 ]
 
 
-async function users(){
+async function users() {
   try {
     for (var i = 0; i < user.length; i++) {
       const add = addDoc(collection(db, "users"), user[i])
-      console.log("add",add)
+      console.log("add", add)
 
     }
   } catch (e) {
@@ -128,41 +129,60 @@ async function users(){
 
 
 
-//  async function getUsers(){
-//   const querySnapshot = await getDocs(collection(db, "users"));
-//   const users = []
-//   querySnapshot.forEach((doc) => {
-//     const data = doc.data()
-//     data.id = doc.id
-//     users.push(data)
-//     console.log('users',users)
-//     // doc.data() is never undefined for query doc snapshots
-//     console.log(doc.id, " => ", doc.data());
-//   });
-//   return users
-// }
 
 
-async function updateStatus(id,status){
+
+async function updateStatus(id, status) {
   await updateDoc(doc(db, "users", id), {
     status
   });
-  
+
 }
 
-async function handleChat (newMessages){
-  try{
-    const docRef = await addDoc(collection(db, "messages"), {
-      messages:newMessages,
-      createdAt:serverTimestamp(),
-      user:auth.currentUser.displayName
-     
+async function handleChat(NewMessages) {
+  const mainCollectionRef = collection(db, 'chatrooms');
+  const mainDocRef = await addDoc(mainCollectionRef, {
+   
+  });
+
+  const mainDocId = mainDocRef.id;
+  const subCollectionRef = collection(db, 'chatrooms', mainDocId, 'messages')
+  await addDoc(subCollectionRef, {
+    
+    text: NewMessages ,
+    createdAt:Date.now(),
+    userId:auth.currentUser.uid
+    
+  });
+
+
+}
+
+async function checkAndCreateRoom(friendId,setMsg) {
+  const users = { [friendId]: true, [auth.currentUser.uid]: true }
+
+  const docRef = await addDoc(collection(db, "chatrooms"), {
+    users,
+    createdAt: Date.now(),
+    lastMessage:{}
+  });
+
+  const q = query(collection(db, "chatrooms"), where( `users.${friendId}`, "==", true));
+  console.log('q',q)
+
+  const unsubscribe = onSnapshot(q, (querySnapshot) => {
+    let room;
+    const chat = [];
+    querySnapshot.forEach((doc) => {
+        chat.push({id:doc.id,...doc.data()});
+        room = doc.data()
     });
-  }catch(e){
-    alert (e.message)
+    setMsg(chat)
+    console.log('chats',chat)
+  });
 
-  }
-  
+ 
+
 }
 
 
@@ -171,4 +191,5 @@ async function handleChat (newMessages){
 
 
 
-export { loginWithFacebook, posting,getPosts ,collection, query, where, onSnapshot,db,updateStatus,handleChat}
+
+export { loginWithFacebook, posting, getPosts, collection, query, where, onSnapshot, db, updateStatus, checkAndCreateRoom,handleChat }

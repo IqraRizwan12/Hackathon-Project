@@ -1,13 +1,14 @@
 'use client'
 import { useEffect, useState } from "react"
 import { Header } from '../component/Header'
-import { handleChat, posting } from '../config/firebase'
+import { checkAndCreateRoom, posting } from '../config/firebase'
 import { getPosts } from "../config/firebase"
 import { getUsers } from "../config/firebase"
 import Image from 'next/image'
 import Link from 'next/link'
 import Popup from "../component/Popup"
 import { updateStatus } from "../config/firebase"
+import { handleChat } from "../config/firebase"
 import {collection, query, where, onSnapshot,db} from '../config/firebase'
 import { FaHome, FaCompass, FaShoppingBag, FaHeart, FaEnvelope, FaCog, FaVideo, FaCamera, FaSmile } from 'react-icons/fa';
 
@@ -20,7 +21,8 @@ export default function Dashboard() {
   const [popUpOpen, setPopUpOpen] = useState(false);
   const [friendRequest,setFriendRequest] = useState([])
   const [friends,setFriends] = useState()
-  const [newMessages,setNewMessages] = useState()
+  const [NewMessages,setNewMessages] = useState()
+  const [msg,setMsg] = useState()
   
 
   const openPopup = () => {
@@ -49,12 +51,7 @@ export default function Dashboard() {
 
   },[])
 
-  const postMessages = async () =>{
-
-    const msg = await handleChat(newMessages)
-    console.log('msg',msg)
-
-  }
+  
 
   const getData = async () => {
       const data = await getPosts()
@@ -73,6 +70,7 @@ export default function Dashboard() {
   }
 
 
+
   async function MyContacts(){
     const q = query(collection(db, "users"), where("status", "==", "accepted"));
 
@@ -86,6 +84,15 @@ export default function Dashboard() {
   
     
   }
+
+
+  const postMessages = ()=>{
+    handleChat(NewMessages)
+
+  }
+
+
+  
 
 
  
@@ -109,7 +116,6 @@ export default function Dashboard() {
 
   }
 
-  
 
  
   
@@ -186,7 +192,8 @@ export default function Dashboard() {
     <div>
        <h1 style={{fontSize:'large',margin:'10px',padding:'10px',height:'40px',fontWeight:'bolder'}} >CHATS</h1>
         {friends.map(item =>{
-          return <div onClick={openPopupWindow}  style={{border:'1px solid black', borderRadius:'10px',margin:'10px',padding:'10px',width:'200px',display:'flex',justifyContent:'space-between'}} >
+          return <div onClick={()=>{checkAndCreateRoom(item.id,setMsg) 
+          openPopupWindow } }  style={{border:'1px solid black', borderRadius:'10px',margin:'10px',padding:'10px',width:'200px',display:'flex',justifyContent:'space-between'}} >
            <h1> {item.fullname}</h1>
             <FaEnvelope/>
           </div>
@@ -209,14 +216,14 @@ export default function Dashboard() {
     </div>
     </Popup>
 
-    <Popup isOpen={popUpOpen} onClose={closePopupWindow}>
+    {/* <Popup isOpen={popUpOpen} onClose={closePopupWindow}> */}
       <div>
         <form >
-          <input style={{backgroundColor:'beige'}} type="text" placeholder="Type your message here..." onChange={(e)=>setNewMessages(e.target.value)} value={newMessages}/>
+          <input style={{backgroundColor:'beige'}} type="text" placeholder="Type your message here..." onChange={(e)=>setNewMessages(e.target.value)} />
           <button  onClick={postMessages}>Send</button>
         </form>
       </div>
-    </Popup>
+    {/* </Popup> */}
 
   
 

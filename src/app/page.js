@@ -16,30 +16,10 @@ export default function Home() {
 
       <div style={{width:'30%',margin:'auto'}} >
 
-        <div style={{ fontSize:'large',backgroundColor: 'green', borderRadius: '10px', border: '1px solid black' }} >
+        <div style={{ padding:'10px', textAlign:'center',fontSize:'large',backgroundColor: 'green', borderRadius: '10px', border: '1px solid black',margin:'10px' }} >
           <Link href="/login">Login</Link>
         </div>
 
-
-        <h2 style={{ width: '30%', height: '35px', fontSize: 'large', borderRadius: '5px', color: 'white', backgroundColor: 'blue', marginBottom: '10px', border: '1px solid beige' }} >
-          Sign In With Google
-        </h2>
-
-        <h2 style={{ width: '50%', height: '35px', fontSize: 'large', borderRadius: '5px', color: 'white', backgroundColor: 'blue', marginBottom: '10px', border: '1px solid beige' }}>
-          Sign In With Facebook
-        </h2>
-
-
-        <h2 style={{ width: '50%', height: '35px', fontSize: 'large', borderRadius: '5px', color: 'white', backgroundColor: 'blue', marginBottom: '10px', border: '1px solid beige' }}>
-          Sign In With Apple
-
-        </h2>
-
-
-        <h2 style={{ width: '50%', height: '35px', fontSize: 'large', borderRadius: '5px', color: 'white', backgroundColor: 'blue', marginBottom: '10px', border: '1px solid beige' }}>
-          Sign In With Email
-
-        </h2>
 
       </div>
       </div>
