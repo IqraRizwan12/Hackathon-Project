@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { FacebookAuthProvider } from "firebase/auth"
 import { getAuth, signInWithPopup } from "firebase/auth"
-import { collection, addDoc, getFirestore, getDocs,updateDoc,doc } from "firebase/firestore"
+import { collection, addDoc, getFirestore, getDocs,updateDoc,doc,serverTimestamp } from "firebase/firestore"
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage"
 import {  query, where, onSnapshot } from "firebase/firestore"
 
@@ -150,21 +150,25 @@ async function updateStatus(id,status){
   
 }
 
-//  async function getAcceptedRequest(){
-//   const q = query(collection(db, "users"), where("status", "==", "accepted"));
+async function handleChat (newMessages){
+  try{
+    const docRef = await addDoc(collection(db, "messages"), {
+      messages:newMessages,
+      createdAt:serverTimestamp(),
+      user:auth.currentUser.displayName
+     
+    });
+  }catch(e){
+    alert (e.message)
 
-//   const unsubscribe = onSnapshot(q, (querySnapshot) => {
-//     querySnapshot.forEach((doc) => {
-//       console.log(doc.id, " => ", doc.data());
-//     });
-   
-//   });
+  }
   
-// }
+}
 
 
 
 
 
 
-export { loginWithFacebook, posting,getPosts ,collection, query, where, onSnapshot,db,updateStatus}
+
+export { loginWithFacebook, posting,getPosts ,collection, query, where, onSnapshot,db,updateStatus,handleChat}

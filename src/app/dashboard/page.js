@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from "react"
 import { Header } from '../component/Header'
-import { posting } from '../config/firebase'
+import { handleChat, posting } from '../config/firebase'
 import { getPosts } from "../config/firebase"
 import { getUsers } from "../config/firebase"
 import Image from 'next/image'
@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [popUpOpen, setPopUpOpen] = useState(false);
   const [friendRequest,setFriendRequest] = useState([])
   const [friends,setFriends] = useState()
+  const [newMessages,setNewMessages] = useState()
   
 
   const openPopup = () => {
@@ -47,6 +48,13 @@ export default function Dashboard() {
     MyContacts()
 
   },[])
+
+  const postMessages = async () =>{
+
+    const msg = await handleChat(newMessages)
+    console.log('msg',msg)
+
+  }
 
   const getData = async () => {
       const data = await getPosts()
@@ -79,8 +87,6 @@ export default function Dashboard() {
     
   }
 
-  console.log('friend',friends)
-
 
  
 
@@ -94,9 +100,6 @@ export default function Dashboard() {
   }
 
 
-  
-
-
 
 
   const addData = async () => {
@@ -106,6 +109,9 @@ export default function Dashboard() {
 
   }
 
+  
+
+ 
   
 
   return <div >
@@ -204,7 +210,12 @@ export default function Dashboard() {
     </Popup>
 
     <Popup isOpen={popUpOpen} onClose={closePopupWindow}>
-      <h1>hhhh</h1>
+      <div>
+        <form >
+          <input style={{backgroundColor:'beige'}} type="text" placeholder="Type your message here..." onChange={(e)=>setNewMessages(e.target.value)} value={newMessages}/>
+          <button  onClick={postMessages}>Send</button>
+        </form>
+      </div>
     </Popup>
 
   
