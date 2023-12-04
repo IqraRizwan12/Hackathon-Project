@@ -19,6 +19,9 @@ export default function Home() {
         <div style={{ padding:'10px', textAlign:'center',fontSize:'large',backgroundColor: 'green', borderRadius: '10px', border: '1px solid black',margin:'10px' }} >
           <Link href="/login">Login</Link>
         </div>
+        <div style={{ padding:'10px', textAlign:'center',fontSize:'large',backgroundColor: 'green', borderRadius: '10px', border: '1px solid black',margin:'10px' }} >
+          <Link href="/register">Register</Link>
+        </div>
 
 
       </div>

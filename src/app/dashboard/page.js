@@ -3,12 +3,11 @@ import { useEffect, useState } from "react"
 import { Header } from '../component/Header'
 import { checkAndCreateRoom, posting } from '../config/firebase'
 import { getPosts } from "../config/firebase"
-import { getUsers } from "../config/firebase"
 import Image from 'next/image'
 import Link from 'next/link'
 import Popup from "../component/Popup"
 import { updateStatus } from "../config/firebase"
-import { handleChat } from "../config/firebase"
+import { handleChat,getUsers } from "../config/firebase"
 import {collection, query, where, onSnapshot,db} from '../config/firebase'
 import { FaHome, FaCompass, FaShoppingBag, FaHeart, FaEnvelope, FaCog, FaVideo, FaCamera, FaSmile } from 'react-icons/fa';
 
@@ -58,7 +57,8 @@ export default function Dashboard() {
   }
 
   const request = async () =>{
-    const q = query(collection(db, "users"), where("status", "==", "pending"));
+
+    const q = query(collection(db, "userss"), where("status", "==", "pending"));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const data = [];
       querySnapshot.forEach((doc) => {
@@ -71,7 +71,7 @@ export default function Dashboard() {
 
 
   async function MyContacts(){
-    const q = query(collection(db, "users"), where("status", "==", "accepted"));
+    const q = query(collection(db, "userss"), where("status", "==", "accepted"));
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       const data = [];
@@ -90,6 +90,12 @@ export default function Dashboard() {
 
   }
 
+  const handleClick = async (item)=>{
+    
+      const data = await checkAndCreateRoom(item.id,setMsg)
+    
+  }
+
 
   
 
@@ -106,7 +112,7 @@ export default function Dashboard() {
   }
 
   
-
+  
 
 
 
@@ -148,7 +154,7 @@ export default function Dashboard() {
        <h1 style={{fontSize:'large',margin:'10px',pdding:'10px',height:'40px',fontWeight:'bolder'}} >My Contacts</h1>
         {friends.map(item =>{
           return <div style={{border:'1px solid black', borderRadius:'10px',margin:'10px',padding:'10px'}} >
-           <h1> {item.fullname}</h1>
+           <h1> {item.displayName}</h1>
           </div>
         })}
       </div>
@@ -182,7 +188,7 @@ export default function Dashboard() {
     <h1  style={{fontSize:'large',fontWeight:'bolder',margin:'10px'}}>Friend Request</h1>
     {friendRequest.map(item=>{
       return( <div  style={{border:'1px solid black', borderRadius:'10px',margin:'10px',padding:'10px'}} >
-        <h1>{item.fullname}</h1>
+        <h1>{item.displayName}</h1>
         <button onClick={()=>{updateStatus(item.id,'accepted')}} style={{padding:'10px',margin:'10px',fontSize:'small',backgroundColor:'green',borderRadius:'5px'}}>Confirm</button>
         <button onClick={()=>{updateStatus(item.id,'accepted')}}style={{padding:'10px',margin:'10px',fontSize:'small',backgroundColor:'red',borderRadius:'5px'}}>Reject</button>
       </div>
@@ -193,9 +199,9 @@ export default function Dashboard() {
     <div>
        <h1 style={{fontSize:'large',margin:'10px',padding:'10px',height:'40px',fontWeight:'bolder'}} >CHATS</h1>
         {friends.map(item =>{
-          return <div onClick={()=>{checkAndCreateRoom(item.id,setMsg) 
-          openPopupWindow } }  style={{border:'1px solid black', borderRadius:'10px',margin:'10px',padding:'10px',width:'200px',display:'flex',justifyContent:'space-between'}} >
-           <h1> {item.fullname}</h1>
+          return <div onClick={(item)=> handleClick(item)
+            }  style={{border:'1px solid black', borderRadius:'10px',margin:'10px',padding:'10px',width:'200px',display:'flex',justifyContent:'space-between'}} >
+           <h1> {item.displayName}</h1>
             <FaEnvelope/>
           </div>
         })}
@@ -208,7 +214,7 @@ export default function Dashboard() {
 
       {/* <div>
         {msg.map(item =>{
-          return <div>{item.text}</div>
+          return <div>{item.lastMessage}</div>
         })}
       </div> */}
       </div>
@@ -238,6 +244,7 @@ export default function Dashboard() {
       </div> */}
     {/* </Popup> */}
 
+   
   
 
   </div>
