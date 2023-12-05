@@ -8,21 +8,13 @@ export function Header(){
     const auth = getAuth();
 
 
-
-    //   const friendRequest = async () =>{
-    //     const users = await getUsers
-    //     console.log('u',users)
-    //     setFriends(users)
-    //   }
-
-    // console.log('f',friends)
-
     
 
 useEffect(()=>{
     onAuthStateChanged(auth, (user) => {
       if (user) {
         const uid = user.uid;
+        console.log('user',user)
         setUserDetail(user)
        
       } else {

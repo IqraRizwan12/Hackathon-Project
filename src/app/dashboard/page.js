@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from "react"
+import { useRouter } from 'next/navigation'
 import { Header } from '../component/Header'
 import { checkAndCreateRoom, posting } from '../config/firebase'
 import { getPosts } from "../config/firebase"
@@ -7,7 +8,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Popup from "../component/Popup"
 import { updateStatus } from "../config/firebase"
-import { handleChat,getUsers } from "../config/firebase"
+import { handleChat,getMsg } from "../config/firebase"
 import {collection, query, where, onSnapshot,db} from '../config/firebase'
 import { FaHome, FaCompass, FaShoppingBag, FaHeart, FaEnvelope, FaCog, FaVideo, FaCamera, FaSmile } from 'react-icons/fa';
 
@@ -22,6 +23,7 @@ export default function Dashboard() {
   const [friends,setFriends] = useState()
   const [NewMessages,setNewMessages] = useState()
   const [msg,setMsg] = useState()
+  const router = useRouter()
   
 
   const openPopup = () => {
@@ -46,7 +48,7 @@ export default function Dashboard() {
     getData()
     request()
     MyContacts()
-
+   
   },[])
 
   
@@ -87,20 +89,20 @@ export default function Dashboard() {
 
   const postMessages = ()=>{
     handleChat(NewMessages)
+   
 
   }
 
   const handleClick = async (item)=>{
     
-      const data = await checkAndCreateRoom(item.id,setMsg)
+      const data = await checkAndCreateRoom(item.uid,setMsg)
+      router.push('/chats')
+         
     
   }
 
-
-  
-
-
  
+
 
   if(!post){
     return<div>Loading..</div>
@@ -188,9 +190,11 @@ export default function Dashboard() {
     <h1  style={{fontSize:'large',fontWeight:'bolder',margin:'10px'}}>Friend Request</h1>
     {friendRequest.map(item=>{
       return( <div  style={{border:'1px solid black', borderRadius:'10px',margin:'10px',padding:'10px'}} >
-        <h1>{item.displayName}</h1>
-        <button onClick={()=>{updateStatus(item.id,'accepted')}} style={{padding:'10px',margin:'10px',fontSize:'small',backgroundColor:'green',borderRadius:'5px'}}>Confirm</button>
+        <h1 style={{textAlign:'center'}}>{item.displayName}</h1>
+        <center>
+        <button onClick={()=>{updateStatus(item.id,'accepted')}} style={{marginLeft:'10px',padding:'10px',margin:'10px',fontSize:'small',backgroundColor:'green',borderRadius:'5px',textAlign:'center'}}>Confirm</button>
         <button onClick={()=>{updateStatus(item.id,'accepted')}}style={{padding:'10px',margin:'10px',fontSize:'small',backgroundColor:'red',borderRadius:'5px'}}>Reject</button>
+        </center>
       </div>
      )
     })}
@@ -212,11 +216,7 @@ export default function Dashboard() {
         </form>
       </div>
 
-      {/* <div>
-        {msg.map(item =>{
-          return <div>{item.lastMessage}</div>
-        })}
-      </div> */}
+     
       </div>
     </div>
     
@@ -235,14 +235,14 @@ export default function Dashboard() {
     </div>
     </Popup>
 
-    {/* <Popup isOpen={popUpOpen} onClose={closePopupWindow}> */}
-      {/* <div>
+    <Popup isOpen={popUpOpen} onClose={closePopupWindow}> 
+      <div>
         <form >
           <input style={{backgroundColor:'beige'}} type="text" placeholder="Type your message here..." onChange={(e)=>setNewMessages(e.target.value)} />
           <button  onClick={postMessages}>Send</button>
         </form>
-      </div> */}
-    {/* </Popup> */}
+      </div>
+     </Popup>
 
    
   
